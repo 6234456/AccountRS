@@ -1,4 +1,5 @@
 fn main() {
+    let a = vec![1,2,3];
 }
 
 struct Account{
@@ -11,9 +12,9 @@ struct Account{
 impl Account {
     fn new(id:u16, name:String, value:u32) -> Account {
         Account {
-            id : id,
-            name: name,
-            value: value,
+            id,
+            name,
+            value,
             subs: None,
         }
     }
@@ -50,14 +51,13 @@ impl Account {
             Some(x) => {
                for i in 0..x.len() {
                    if x[i].id == id {
-                       x.swap_remove(i);
-                       if x.len() == 0 {
-                       }
+                       x.remove(i);
+                   } else {
+                       x[i].remove(id);
                    }
                }
             }
         }
-
         self
     }
 
@@ -81,6 +81,10 @@ impl Account {
             }
         }
     }
+
+    fn display(&mut self, precision:u8) -> String {
+        String::from("")
+    }
 }
 
 #[test]
@@ -95,7 +99,6 @@ fn test_account( ){
     a.add(b);
 
     assert_eq!(a.find(12321).unwrap().name, String::from("demo2"));
-    println!("{}", a.val());
     assert_eq!(a.val(), 25);
 
     a.find(12321).unwrap().add(Account::new(1234, String::from("1234"), 13));
@@ -104,5 +107,14 @@ fn test_account( ){
     a.find(1234).unwrap().value = 1;
     assert_eq!(a.val(), 14);
 
-    println!("{}", a.val());
+    a.remove(1234);
+    let d = match a.find(1234) {
+        None    => 1,
+        Some(_) => 0
+    };
+
+    println!("{}",d);
+
+    assert_eq!(a.val(), 25);
+
 }
